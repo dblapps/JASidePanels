@@ -822,20 +822,93 @@ static char ja_kvoContext;
 
 #pragma mark - Showing Panels
 
+- (void) callDelegateWillPrevState:(JASidePanelState)prevState newState:(JASidePanelState)newState animated:(BOOL)animated
+{
+	if (prevState == JASidePanelLeftVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willHideLeftPanel:animated:)]) {
+			[self.delegate sidePanelController:self willHideLeftPanel:self.leftPanel animated:animated];
+		}
+	}
+	if (prevState == JASidePanelCenterVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willHideCenterPanel:animated:)]) {
+			[self.delegate sidePanelController:self willHideCenterPanel:self.centerPanel animated:animated];
+		}
+	}
+	if (prevState == JASidePanelRightVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willHideRightPanel:animated:)]) {
+			[self.delegate sidePanelController:self willHideRightPanel:self.rightPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelLeftVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willShowLeftPanel:animated:)]) {
+			[self.delegate sidePanelController:self willShowLeftPanel:self.leftPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelCenterVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willShowCenterPanel:animated:)]) {
+			[self.delegate sidePanelController:self willShowCenterPanel:self.centerPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelRightVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:willShowRightPanel:animated:)]) {
+			[self.delegate sidePanelController:self willShowRightPanel:self.rightPanel animated:animated];
+		}
+	}
+}
+
+- (void) callDelegateDidPrevState:(JASidePanelState)prevState newState:(JASidePanelState)newState animated:(BOOL)animated
+{
+	if (prevState == JASidePanelLeftVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didHideLeftPanel:animated:)]) {
+			[self.delegate sidePanelController:self didHideLeftPanel:self.leftPanel animated:animated];
+		}
+	}
+	if (prevState == JASidePanelCenterVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didHideCenterPanel:animated:)]) {
+			[self.delegate sidePanelController:self didHideCenterPanel:self.centerPanel animated:animated];
+		}
+	}
+	if (prevState == JASidePanelRightVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didHideRightPanel:animated:)]) {
+			[self.delegate sidePanelController:self didHideRightPanel:self.rightPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelLeftVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didShowLeftPanel:animated:)]) {
+			[self.delegate sidePanelController:self didShowLeftPanel:self.leftPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelCenterVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didShowCenterPanel:animated:)]) {
+			[self.delegate sidePanelController:self didShowCenterPanel:self.centerPanel animated:animated];
+		}
+	}
+	if (newState == JASidePanelRightVisible) {
+		if ([self.delegate respondsToSelector:@selector(sidePanelController:didShowRightPanel:animated:)]) {
+			[self.delegate sidePanelController:self didShowRightPanel:self.rightPanel animated:animated];
+		}
+	}
+}
+
 - (void)_showLeftPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+	JASidePanelState prevState = self.state;
+	[self callDelegateWillPrevState:prevState newState:JASidePanelLeftVisible animated:animated];
     self.state = JASidePanelLeftVisible;
     [self _loadLeftPanel];
     
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished) {
+			[self callDelegateDidPrevState:prevState newState:JASidePanelLeftVisible animated:animated];
+		}];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
+		[self callDelegateDidPrevState:prevState newState:JASidePanelLeftVisible animated:animated];
     }
     
     if (self.style == JASidePanelSingleActive) {
@@ -845,19 +918,24 @@ static char ja_kvoContext;
 }
 
 - (void)_showRightPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+	JASidePanelState prevState = self.state;
+	[self callDelegateWillPrevState:prevState newState:JASidePanelRightVisible animated:animated];
     self.state = JASidePanelRightVisible;
     [self _loadRightPanel];
     
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished) {
+			[self callDelegateDidPrevState:prevState newState:JASidePanelRightVisible animated:animated];
+		}];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
+		[self callDelegateDidPrevState:prevState newState:JASidePanelRightVisible animated:animated];
     }
     
     if (self.style == JASidePanelSingleActive) {
@@ -867,6 +945,8 @@ static char ja_kvoContext;
 }
 
 - (void)_showCenterPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+	JASidePanelState prevState = self.state;
+	[self callDelegateWillPrevState:prevState newState:JASidePanelCenterVisible animated:animated];
     self.state = JASidePanelCenterVisible;
     
     [self _adjustCenterFrame];
@@ -876,6 +956,7 @@ static char ja_kvoContext;
             self.leftPanelContainer.hidden = YES;
             self.rightPanelContainer.hidden = YES;
             [self _unloadPanels];
+			[self callDelegateDidPrevState:prevState newState:JASidePanelCenterVisible animated:animated];
         }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
@@ -886,6 +967,7 @@ static char ja_kvoContext;
         self.leftPanelContainer.hidden = YES;
         self.rightPanelContainer.hidden = YES;
         [self _unloadPanels];
+		[self callDelegateDidPrevState:prevState newState:JASidePanelCenterVisible animated:animated];
     }
     
     self.tapView = nil;

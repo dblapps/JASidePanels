@@ -31,6 +31,9 @@
 #import "JALeftViewController.h"
 #import "JARightViewController.h"
 
+@interface JAAppDelegate () <JASidePanelControllerDelegate>
+@end
+
 @implementation JAAppDelegate
 
 @synthesize window = _window;
@@ -38,8 +41,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	
-	self.viewController = [[JASidePanelController alloc] init];
+
+	JASidePanelController* sidePanelController = [[JASidePanelController alloc] init];
+	self.viewController = sidePanelController;
+	sidePanelController.delegate = self;
     self.viewController.shouldDelegateAutorotateToVisiblePanel = NO;
     
 	self.viewController.leftPanel = [[JALeftViewController alloc] init];
@@ -51,5 +56,66 @@
     return YES;
 }
 
+#pragma mark - JASidePanelControllerDelegate
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
+
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated
+{
+	NSLog(@"%s",__PRETTY_FUNCTION__);
+}
 
 @end

@@ -36,9 +36,28 @@ typedef enum _JASidePanelState {
     JASidePanelRightVisible
 } JASidePanelState;
 
+@class JASidePanelController;
+@protocol JASidePanelControllerDelegate <NSObject>
+@optional
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideLeftPanel:(UIViewController*)leftPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideRightPanel:(UIViewController*)rightPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willShowCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didShowCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController willHideCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated;
+- (void) sidePanelController:(JASidePanelController*)sidePanelController didHideCenterPanel:(UIViewController*)centerPanel animated:(BOOL)animated;
+@end
+
 @interface JASidePanelController : UIViewController<UIGestureRecognizerDelegate>
 
 #pragma mark - Usage
+
+@property (nonatomic, weak) id<JASidePanelControllerDelegate> delegate;
 
 // set the panels
 @property (nonatomic, strong) UIViewController *leftPanel;   // optional
